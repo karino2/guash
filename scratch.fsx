@@ -1,4 +1,21 @@
 
+#r "nuget: Argu, 6.1.1"
+open Argu
+
+type Arguments =
+    | [<AltCommandLine("-d")>] Debug
+    | [<AltCommandLine("-dev")>] Dev_Mode
+with
+    interface IArgParserTemplate with
+        member arg.Usage =
+            match arg with
+            | Debug -> "Debug mode. Show log and keep intemediate tmp folder."
+            | Dev_Mode -> "Development mode. Use when launch from VS Code with F5."
+
+
+let parser = ArgumentParser.Create<Arguments>(programName = "guash")
+parser.Parse [|"-hoge"|]
+
 open System.Diagnostics
 open System.IO
 

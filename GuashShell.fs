@@ -97,8 +97,5 @@ let doAfter (lines:string array) (results: string array) =
     let afterShLines = toAfterShell lines qindex results
     File.WriteAllLines(afterShPath, afterShLines) 
     chmod afterShPath |> ignore
-    runSh afterShPath |> ignore
+    runSh afterShPath
 
-let doAfterAndDeleteTemp (lines:string array) (results: string array) =
-    doAfter lines results
-    removeTempDir ()

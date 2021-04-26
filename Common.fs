@@ -8,5 +8,6 @@ let COLUMN_TYPE_FILTER = 1
 let COLUMN_TYPE_TEXT = 2
 let COLUMN_TYPE_NONE = 3
 
+let mutable debugMode = false
 
 type DataMessage = {Type: int; Title:string; Args: string array}
