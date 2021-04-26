@@ -71,11 +71,6 @@ const showText = (panel, title) => {
     getTextRoot(panel).style.display = "block"
 }
 
-const setupColumn = (column) => {
-    column.addEventListener('click',
-            (e)=>onFilterClick(column, e))
-
-}
 
 
 const COLUMN_TYPE_FILTER=1
@@ -85,6 +80,21 @@ const COLUMN_TYPE_NONE=3
 window.addEventListener('load', (e)=> {
     const leftColumn = document.getElementById('left-column')
     const rightColumn = document.getElementById('right-column')
+
+    const getTextInput = (column) => column.getElementsByClassName("text-root")[0].getElementsByTagName("input")[0]
+
+    const setupColumn = (column) => {
+        column.addEventListener('click',
+                (e)=>onFilterClick(column, e))
+                
+        getTextInput(column).addEventListener('keydown', (e)=> {
+            if(e.key === "Enter") {
+                gotoNext(column)
+                return
+            }
+        })
+    }
+
 
     setupColumn(leftColumn)
     setupColumn(rightColumn)
@@ -100,6 +110,23 @@ window.addEventListener('load', (e)=> {
 
     let leftType = COLUMN_TYPE_NONE
     let rightType = COLUMN_TYPE_NONE
+
+    const gotoNext = (column) => {
+        if(column == leftColumn && rightType != COLUMN_TYPE_NONE) {
+            focusColumn(rightColumn, rightType)
+            return
+        }
+        onSubmit()
+    }
+
+    const focusColumn = (column, columnType)=> {
+        if (columnType == COLUMN_TYPE_FILTER) {
+            column.getElementsByTagName("filter-root")[0].getElementsByTagName("input")[0].focus()
+        } else { // TEXT
+            getTextInput(column).focus()
+        }     
+    }
+
 
     let leftData = null
     let rightData = null
