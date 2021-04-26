@@ -1,0 +1,72 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>guash query</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="rescss:bulma.css">
+    <script src="resjs:client.js"></script>
+    <style>
+        .panel-block.is-active {
+            background-color: #485fc7;
+            color: #fff;            
+        }
+        .panel-block.is-active:hover {
+            background-color: #8292d6;
+            color: #c4c4c4;            
+        }
+    </style>
+
+</head>
+<body class="body">
+    <div class="buttons level-right">
+      <button class="button" id="cancel-button">Cancel</button>
+      <button class="button" id="submit-button">Submit</button>
+  </div>
+  <div class="columns">
+        <div class="column" id="left-column">
+              <div class="panel">
+                  <p class="panel-heading">
+                    Repositories
+                  </p>
+                  <div class="container filter-root">
+                    <div class="panel-block">
+                      <p class="control has-icons-left">
+                        <input class="input" type="text" placeholder="Filter">
+                        <span class="icon is-left">
+                          <i class="fas fa-search" aria-hidden="true"></i>
+                        </span>
+                      </p>
+                    </div>
+                    <div class="container list-root">
+                    </div>
+                  </div>
+                  <div class="container text-root" style="display:none;">
+                    <input class="input is-primary" type="text" autocorrect="off" placeholder="Primary input">
+                  </div>
+            </div>        
+        </div>
+        <div class="column" id="right-column">
+            <div class="panel">
+                <p class="panel-heading">
+                    Hello World
+                </p>
+                <div class="container filter-root">
+                  <div class="panel-block">
+                    <p class="control has-icons-left">
+                      <input class="input" type="text" placeholder="Filter">
+                      <span class="icon is-left">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="container list-root">
+                  </div>
+              </div>
+              <div class="container text-root" style="display:none;">
+                  <input class="input is-primary" type="text" autocorrect="off" placeholder="Right">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>

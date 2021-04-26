@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+DEST=$GUASH_DIR/$1.txt
+
+echo TEXT > $DEST
+echo $2 >> $DEST
