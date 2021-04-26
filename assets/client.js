@@ -38,7 +38,7 @@ const buildListHtml = (files) => {
     const htmls = []
 
     for( const [idx, file] of files.entries() ) {
-        htmls.push(`<a class="panel-block" findex="${idx}">
+        htmls.push(`<a class="panel-block filter-item" findex="${idx}">
     <span class="panel-icon">
     </span>
     ${file}
@@ -47,16 +47,16 @@ const buildListHtml = (files) => {
     return htmls.join("\n")
 }
 
-const getFilterRoot = (panel) => panel.getElementsByClassName("filter-root")[0]
-const getTextRoot = (panel) => panel.getElementsByClassName("text-root")[0]
+const getFilterRoot = (column) => column.getElementsByClassName("filter-root")[0]
+const getTextRoot = (column) => column.getElementsByClassName("text-root")[0]
 
-const showFilter = (panel) => {
-    getFilterRoot(panel).style.display = "block"
-    getTextRoot(panel).style.display = "none"
+const showFilter = (column) => {
+    getFilterRoot(column).style.display = "block"
+    getTextRoot(column).style.display = "none"
 }
-const hideBoth = (panel) => {
-    getFilterRoot(panel).style.display = "none"
-    getTextRoot(panel).style.display = "none"
+const hideBoth = (column) => {
+    getFilterRoot(column).style.display = "none"
+    getTextRoot(column).style.display = "none"
 }
 
 const bindFilterData = (panel, title, texts) => {
@@ -81,12 +81,17 @@ window.addEventListener('load', (e)=> {
     const leftColumn = document.getElementById('left-column')
     const rightColumn = document.getElementById('right-column')
 
-    const getTextInput = (column) => column.getElementsByClassName("text-root")[0].getElementsByTagName("input")[0]
+    const getTextInput = (column) => getTextRoot(column).getElementsByTagName("input")[0]
+    const getSearchInput = (column) => getFilterRoot(column).getElementsByTagName("input")[0]
 
     const setupColumn = (column) => {
         column.addEventListener('click',
                 (e)=>onFilterClick(column, e))
-                
+
+        getSearchInput(column).addEventListener('input', (e)=> {
+            filterColumn(column, e.target.value)
+        })
+
         getTextInput(column).addEventListener('keydown', (e)=> {
             if(e.key === "Enter") {
                 gotoNext(column)
@@ -99,14 +104,31 @@ window.addEventListener('load', (e)=> {
     setupColumn(leftColumn)
     setupColumn(rightColumn)
 
+    const columnDataMap = new Map()
+
     const bindData = (column, datamsg) => {
         if(datamsg.Type == COLUMN_TYPE_FILTER) {
             bindFilterData(column, datamsg.Title, datamsg.Args)
         } else { // TEXT
             showText(column, datamsg.Title)
         } 
+        columnDataMap[column.id] = datamsg
+    }    
+
+    const filterColumn = (column, pat) => {
+        const arrays = columnDataMap[column.id].Args
+        const matches = arrays.map(elem => elem.includes(pat))
+        const root = column.getElementsByClassName("list-root")[0]
+        const items = root.getElementsByClassName("filter-item")
+        for(const [idx, flag] of matches.entries())
+        {
+            items[idx].className = items[idx].className.replace(" filtered", "")
+            if(!flag) {
+                items[idx].className += " filtered"
+            }
+        }
     }
-    
+
 
     let leftType = COLUMN_TYPE_NONE
     let rightType = COLUMN_TYPE_NONE
@@ -119,9 +141,10 @@ window.addEventListener('load', (e)=> {
         onSubmit()
     }
 
+
     const focusColumn = (column, columnType)=> {
         if (columnType == COLUMN_TYPE_FILTER) {
-            column.getElementsByTagName("filter-root")[0].getElementsByTagName("input")[0].focus()
+            getSearchInput(column).focus()
         } else { // TEXT
             getTextInput(column).focus()
         }     
@@ -145,6 +168,7 @@ window.addEventListener('load', (e)=> {
             rightData = datas[1]
             bindData(rightColumn, datas[1])
         }
+        focusColumn(leftColumn)
     })
 
     const getResult = (column, data) => {
