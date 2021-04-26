@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-DEST="$GUASH_DIR/$1.txt"
+
+DEST="$GUASH_DIR/1.txt"
+if [ -f "$DEST" ]; then
+    DEST="$GUASH_DIR/2.txt"
+fi
 
 echo FILTER > "$DEST"
-echo $2 >> "$DEST"
+echo $1 >> "$DEST"
 cat - >> "$DEST"

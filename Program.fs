@@ -17,8 +17,8 @@ with
 let debugInput () =
     let target = """#!~/bin/guash
 
-ls -t ~/work/GitHub/karino2.github.io/_posts | guash_filter 1 "Src file"
-guash_readtext 2 "Dest name"
+ls -t ~/work/GitHub/karino2.github.io/_posts | guash_filter "Src file"
+guash_readtext "Dest name"
 guash_doquery SRC DEST
 
 ln ~/work/GitHub/karino2.github.io/_posts/${SRC} ~/Google\ ドライブ/DriveText/TeFWiki/${DEST}.md
