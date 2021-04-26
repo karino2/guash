@@ -93,7 +93,7 @@ window.addEventListener('load', (e)=> {
         })
 
         getTextInput(column).addEventListener('keydown', (e)=> {
-            if(e.key === "Enter") {
+            if(e.keyCode === 13) { // enter, without IME.
                 gotoNext(column)
                 return
             }
