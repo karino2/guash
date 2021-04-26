@@ -168,7 +168,7 @@ window.addEventListener('load', (e)=> {
             rightData = datas[1]
             bindData(rightColumn, datas[1])
         }
-        focusColumn(leftColumn)
+        focusColumn(leftColumn, leftType)
     })
 
     const getResult = (column, data) => {
