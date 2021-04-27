@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export GUASH_DIR=$(mktemp -d)
+/usr/bin/env bash $1

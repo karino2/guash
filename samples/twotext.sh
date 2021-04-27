@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env guash
 
-export GUASH_DIR=$(mktemp -d)
 guash_readtext "First Title"
 guash_readtext "Second Title"
 
