@@ -3,14 +3,14 @@ open System.IO
 open Argu
 
 type Arguments =
-    | [<AltCommandLine("-d")>] Delete
+    | [<AltCommandLine("-k")>] Keep
     | [<AltCommandLine("-dev")>] Dev_Mode
 
 with
     interface IArgParserTemplate with
         member arg.Usage =
             match arg with
-            | Delete -> "Delete GUASH_DIR on exit."
+            | Keep -> "Keep GUASH_DIR on exit."
             | Dev_Mode -> "Development mode. Use hardcoded value instead of env value for F5 execution from VS Code."
 
 
@@ -42,7 +42,7 @@ let main argv =
 
         let isDev = results.Contains Dev_Mode
         let guashdir = getGuashDir isDev
-        let deleteOnExit = (not isDev) && (results.Contains Delete)
+        let deleteOnExit = not (isDev || (results.Contains Keep))
 
         runGuash guashdir deleteOnExit
         0 // return an integer exit code
