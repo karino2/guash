@@ -1,6 +1,7 @@
-#!/usr/bin/env guash
+#!/usr/bin/env bash
 
+export GUASH_DIR=$(mktemp -d)
 guash_readtext "Hello Title"
-guash_doquery RES
+RES=$(guash_doquery -d)
 
-echo `date` ":$RES"
+echo "$(date):$RES"

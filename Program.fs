@@ -3,32 +3,33 @@ open System.IO
 open Argu
 
 type Arguments =
-    | [<AltCommandLine("-d")>] Debug
-    | [<AltCommandLine("-s")>] SetCWD
-    | [<MainCommand; ExactlyOnce; Last>] File of file:string
+    | [<AltCommandLine("-d")>] Delete
+    | [<AltCommandLine("-dev")>] Dev_Mode
+
 with
     interface IArgParserTemplate with
         member arg.Usage =
             match arg with
-            | Debug -> "Debug mode. Show log and keep intemediate tmp folder."
-            | SetCWD -> "Set current working directory to the path which script exists."
-            | File _-> "Guash script file."
+            | Delete -> "Delete GUASH_DIR on exit."
+            | Dev_Mode -> "Development mode. Use hardcoded value instead of env value for F5 execution from VS Code."
 
 
-let getInput path =
-    File.ReadAllLines(path)
+let getGuashDir isDev =
+    if isDev then
+        FileInfo("test").FullName
+    else
+        Environment.GetEnvironmentVariable("GUASH_DIR")
 
-
-let runGuash lines =
-    let dmsgs = GuashShell.doBeforeAndGetDataMessage lines
-    let onFinish results =
-        GuashShell.doAfter lines results
-        |> Console.WriteLine
-        if not Common.debugMode then
-            GuashShell.removeTempDir()
+let runGuash guashdir deleteOnExit =
+    let dmsgs = GuashShell.createDataMessage guashdir
+    let onFinish (results:string array) =
+        results |> Array.iter Console.WriteLine
+        if deleteOnExit then
+            Directory.Delete(guashdir, true)
         Environment.Exit 0
     let onCancel () =
-        GuashShell.removeTempDir ()
+        if deleteOnExit then
+            Directory.Delete(guashdir, true)
         printfn "Cancel!"
         Environment.Exit 1
     GuashBrowser.launchBrowser dmsgs onFinish onCancel
@@ -39,17 +40,11 @@ let main argv =
     try
         let results = parser.Parse argv
 
-        let mutable path = results.GetResult File
-        Common.debugMode <- results.Contains Debug
-        if results.Contains SetCWD then
-            let fullpath = FileInfo(path).FullName
-            fullpath
-            |> Path.GetDirectoryName
-            |> Directory.SetCurrentDirectory
-            path <- fullpath
+        let isDev = results.Contains Dev_Mode
+        let guashdir = getGuashDir isDev
+        let deleteOnExit = (not isDev) && (results.Contains Delete)
 
-        let lines = getInput path
-        runGuash lines
+        runGuash guashdir deleteOnExit
         0 // return an integer exit code
     with
         | :? ArguParseException as ex ->

@@ -1,7 +1,9 @@
-#!/usr/bin/env guash
+#!/usr/bin/env bash
 
+export GUASH_DIR=$(mktemp -d)
 guash_readtext "First Title"
 guash_readtext "Second Title"
-guash_doquery RES1 RES2
 
-echo "First=${RES1}, Second=${RES2}"
+RES=($(guash_doquery -d))
+
+echo "First=${RES[0]}, Second=${RES[1]}"
