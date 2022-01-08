@@ -2,6 +2,7 @@
 module GuashBrowser
 
 open System
+open System.Drawing
 open PhotinoNET
 open System.IO
 open System.Reflection
@@ -10,7 +11,6 @@ open Common
 
 
 type Message = {Type: string; Body: string}
-
 
 let sendMessage (wnd:PhotinoWindow) (message:Message) =
     let msg = JsonSerializer.Serialize(message)
@@ -29,25 +29,28 @@ let onMessage dmsgs onFinish onCancel (wnd:Object) (message:string) =
         onFinish results
     | _ -> failwithf "Unknown msg type %s" msg.Type
 
-let winConfig (options: PhotinoWindowOptions) =
+let launchBrowser (dmsgs : DataMessage array) onFinish onCancel =
     let asm = Assembly.GetExecutingAssembly()
 
     let load (url:string) (prefix:string) =
         let fname = url.Substring(prefix.Length)
         asm.GetManifestResourceStream($"guash_doquery.assets.{fname}")
 
-    
-    options.CustomSchemeHandlers.Add("resjs",
-         CustomSchemeDelegate(fun url contentType ->
-                        contentType <- "text/javascript"
-                        load url "resjs:"))
-    options.CustomSchemeHandlers.Add("rescss",
-         CustomSchemeDelegate(fun url contentType ->
-                        contentType <- "text/css"
-                        load url "rescss:"))
+    let win = (new PhotinoWindow(null))
 
-let launchBrowser (dmsgs : DataMessage array) onFinish onCancel =
-    let win = new PhotinoWindow("Hello Photino", Action<PhotinoWindowOptions>(winConfig))
+    win.LogVerbosity <- 0
+    win.SetTitle("Guash")
+        .SetUseOsDefaultSize(false)
+        .Center()
+        .RegisterCustomSchemeHandler("resjs",
+            PhotinoWindow.NetCustomSchemeDelegate(fun sender scheme url contentType ->
+                contentType <- "text/javascript"
+                load url "resjs:"))
+        .RegisterCustomSchemeHandler("rescss", 
+            PhotinoWindow.NetCustomSchemeDelegate(fun sender scheme url contentType ->
+                contentType <- "text/css"
+                load url "rescss:")) |> ignore
+                
     let asm = Assembly.GetExecutingAssembly()
     use stream = asm.GetManifestResourceStream("guash_doquery.assets.index.html")
     use sr = new StreamReader(stream)
@@ -55,7 +58,7 @@ let launchBrowser (dmsgs : DataMessage array) onFinish onCancel =
     // printfn "content: %s" text
 
     win.RegisterWebMessageReceivedHandler(System.EventHandler<string>(onMessage dmsgs onFinish onCancel))
-        .Resize(80, 80, "%")
         .Center()
+        .SetSize(new Size(1200, 700))
         .LoadRawString(text)
         .WaitForClose()
