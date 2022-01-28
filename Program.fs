@@ -30,7 +30,6 @@ let runGuash guashdir deleteOnExit =
     let onCancel () =
         if deleteOnExit then
             Directory.Delete(guashdir, true)
-        printfn "Cancel!"
         Environment.Exit 1
     GuashBrowser.launchBrowser dmsgs onFinish onCancel
 
