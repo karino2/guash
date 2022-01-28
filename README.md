@@ -23,3 +23,5 @@ Guash use following libraries.
 
 - [bluma.css](https://bulma.io/)
 - [Font awesome free 5 web](https://fontawesome.com/) 
+- [Argu](https://www.nuget.org/packages/Argu/)
+- [Photino.NET](https://www.nuget.org/packages/Photino.NET/)
