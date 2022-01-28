@@ -17,6 +17,12 @@
         .filtered {
           display:none;
         }
+        .list-result {
+          background-color: hsl(171, 100%, 29%);
+          color: hsl(171, 100%, 96%); 
+          padding: 0em 0.5em 0em 0.5em;
+
+        }
     </style>
 
 </head>
@@ -32,6 +38,9 @@
                     Repositories
                   </p>
                   <div class="container filter-root">
+                    <div class="panel-block">
+                      <label>Selected:</label><span class="list-result"></span>
+                    </div>
                     <div class="panel-block">
                       <p class="control has-icons-left">
                         <input class="input" type="text" autocorrect="off" placeholder="Filter">
@@ -55,6 +64,9 @@
                 </p>
                 <div class="container filter-root">
                   <div class="panel-block">
+                    <label>Selected:</label><span class="list-result"></span>
+                  </div>
+                <div class="panel-block">
                     <p class="control has-icons-left">
                       <input class="input" type="text" autocorrect="off" placeholder="Filter">
                       <span class="icon is-left">

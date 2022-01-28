@@ -21,7 +21,12 @@ const onFilterClick = (filter, e) => {
         {
             atag.className = atag.className.replace(" is-active", "")
         }
-        e.target.className += " is-active"
+        const targetA = e.target;
+        targetA.className += " is-active"
+
+        const span = getResultSpan(filter)
+        span.innerText = targetA.innerText
+        span.setAttribute("findex", targetA.getAttribute("findex"))
     }
 }
 
@@ -49,6 +54,7 @@ const buildListHtml = (files) => {
 
 const getFilterRoot = (column) => column.getElementsByClassName("filter-root")[0]
 const getTextRoot = (column) => column.getElementsByClassName("text-root")[0]
+const getResultSpan = (column) => column.getElementsByClassName("list-result")[0]
 
 const showFilter = (column) => {
     getFilterRoot(column).style.display = "block"
@@ -173,12 +179,13 @@ window.addEventListener('load', (e)=> {
 
     const getResult = (column, data) => {
         if (data.Type == COLUMN_TYPE_FILTER) {
-            const actives = column.getElementsByClassName("is-active")
-            if (actives.length == 0) {
+            const result = getResultSpan(column)
+            const findex = result.getAttribute("findex");
+            if (findex == null) {
                 throw 'No selection!'
             }
             const files = data.Args
-            return files[parseInt(actives[0].getAttribute("findex"))]
+            return files[parseInt(findex)]
         } else {// TEXT
             const res = column.getElementsByClassName("text-root")[0].getElementsByClassName("input")[0].value
             if (res == "")
