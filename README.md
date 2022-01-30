@@ -9,6 +9,19 @@ $ brew tap karino2/tap
 $ brew install karino2/tap/guash
 ```
 
+### Troubleshooting on homebrew tap
+
+If you see the error saying
+```
+A fatal error occurred. The required library libhostfxr.dylib could not be found.
+```
+
+You need to set DOTNET_ROOT like following (in .zshrc or .bashrc, etc.)
+
+```
+$ export DOTNET_ROOT="$(brew --prefix)/opt/dotnet/libexec"
+```
+
 ### Manual installation
 
 Download zip from releases and copy following files to directory in PATH.
