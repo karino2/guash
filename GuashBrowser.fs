@@ -3,7 +3,7 @@ module GuashBrowser
 
 open System
 open System.Drawing
-open PhotinoNET
+open Photino.NET
 open System.IO
 open System.Reflection
 open System.Text.Json
